@@ -1,17 +1,42 @@
 <?php 
 
+    if(isset($argv)){
+        foreach ($argv as $key => $arg) {
+            if($key > 0){
+                $e=explode("=",$arg);
+                if(count($e)==2){
+                    $_GET[$e[0]]=$e[1];
+                }else {
+                    $_GET[$e[0]]=0;
+                }
+            }
+        }
+    }
+    if(isset($_GET['--help'])){
+        print("Comando exportar
+        Añade los siguientes argumentos:
+            -host=host: Indica el host de la base de datos de wordpress a exportar
+        ");
+        die;
+    }
 //exportar el sql
     $new_site = 'wordpress33';
     $comprimido = 'wordpress_bkp.zip';
 
     //ENTER THE RELEVANT INFO BELOW
-    $mysqlUserName      = "root";
+    if(isset($_GET['-dbuser'])){
+        $mysqlUserName      = $_GET['-dbuser'];
+    }else{
+        print("El argumento -dbuser es obligatoro y debe indicar el usiao de la base de datos. Ej
+        -dbuser=root
+        ");
+        die;
+    }
     $mysqlPassword      = "";
     $mysqlHostName      = "localhost";
     $DbName             = "wordpress";
     $backup_name        = "mybackup.sql";
     $tables             = "Your tables";
-
     // Extender tiempo para garantizar ejecución completa de compresión
     ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
     set_time_limit(300);
@@ -35,7 +60,7 @@
         { 
             $target_tables = array_intersect( $target_tables, $tables); 
         }
-       // $content="create database " . $name.";\n\n";
+        $content="SET FOREIGN_KEY_CHECKS=0;\n\n";
         foreach($target_tables as $table)
         {
             $result         =   $mysqli->query('SELECT * FROM '.$table);  
@@ -88,6 +113,7 @@
 
         // Reemplazar en $content /localhost/wordpress por  '/localhost/' . $new_site
         $content = str_replace($mysqlHostName . '/' . $DbName, $mysqlHostName . '/' . $new_site, $content);
+        $content.="SET FOREIGN_KEY_CHECKS=1;\n\n";
         if(file_put_contents( $backup_name, $content)) {
             echo "Descarga exitosa " . "<br />";
         } else {
