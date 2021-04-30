@@ -79,7 +79,7 @@ if(isset($argv)){
 
 
 $comprimido = 'wordpress_bkp.zip';
-$destino = '../wordpress33';
+$destino = '../'. $_GET['-newsite'];
 $copia = '/sql/mybackup.sql';   // debe estar dentro de $destino: $destino . $copiaç
 
 //datos importantes
@@ -146,7 +146,7 @@ restoreMysqlDB($file_path, $conn);
 //read the entire string
 $str=file_get_contents($destino . '/wp-config.php');
 //replace something in the file string - this is a VERY simple example
-$str=str_replace('\'wordpress\'', '\'wordpress33\'', $str);
+$str=str_replace('\'wordpress\'', '\''.$_GET['-newsite'].'\'', $str);
 //write the entire string
 file_put_contents($destino . '/wp-config.php', $str);
 
