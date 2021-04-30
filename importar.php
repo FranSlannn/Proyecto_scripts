@@ -26,6 +26,7 @@ if(isset($argv)){
 
     //rellenar con todos los campos que queramos
     if(isset($_GET['-help'])){ //necesario el --help para funcionar
+        // php .\importar.php -help  
         print("Comando importar.php
         Añade los siguientes argumentos:
             -host=localhost: Indica el host de la base de datos de wordpress a exportar
@@ -38,7 +39,7 @@ if(isset($argv)){
 
     // host
     if(isset($_GET['-host'])) { //servidor
-        $mysqlHostName = $_GET['-host']; //'localhost';
+        $host = $_GET['-host']; //'localhost';
     } else {//ejemplo de como se puede cambiar los datos en el powershell
         print("El argumento -host es obligatorio y debe indicar el nombre del servidor. Ej
         -host=localhost
@@ -59,7 +60,7 @@ if(isset($argv)){
    
     //informacion relevante
     if(isset($_GET['-dbuser'])) {
-        $mysqlUserName      = $_GET['-dbuser'];
+        $dbuser      = $_GET['-dbuser'];
     } else {//ejemplo de como se puede cambiar los datos en el powershell
         print("El argumento -dbuser es obligatorio y debe indicar el usuario de la base de datos. Ej
         -dbuser=root
@@ -68,10 +69,10 @@ if(isset($argv)){
     }
 
     if(isset($_GET['-pass'])) {
-        $mysqlPassword = $_GET['-pass'];
+        $pass = $_GET['-pass'];
     } else {
         print("El argumento -pass es obligatorio y debe indicar la clave del usuario. Ej
-        -pass=hola
+        -pass=contraseña
         ");
         die;
     }

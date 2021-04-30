@@ -83,7 +83,7 @@
         $mysqlPassword = $_GET['-pass'];
     } else {
         print("El argumento -pass es obligatorio y debe indicar la clave del usuario. Ej
-        -pass=hola
+        -pass=contraseña
         ");
         die;
     }
