@@ -1,7 +1,8 @@
 <?php 
 
 // Para la linea de comando o desde Power Shell:
-// php exportar.php -host=localhost -newsite=wordpress33 -dbname=wordpress -dbuser=root
+// buscar la ruta C:\xampp\htdocs\scripts
+// php exportar.php -host=localhost -newsite=wordpress33 -dbname=wordpress -dbuser=root -pass=
 
 // Para el navegador:
 // http://localhost/scripts/exportar.php?-host=localhost&-newsite=wordpress33&-dbname=wordpress
@@ -24,7 +25,9 @@
 
     //rellenar con todos los campos que queramos; es la ayuda que vera el usuario
     if(isset($_GET['-help'])){ //necesario el --help para funcionar
-        print("Comando exportar.php
+       // php .\exportar.php -help  
+       
+        print("Comando exportar.php 
         Añade los siguientes argumentos:
             -host=localhost: Indica el host de la base de datos de wordpress a exportar
             -dbuser=root: Indica el nombre del usuario de la base de datos
