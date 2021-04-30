@@ -174,7 +174,7 @@
         
 
         if(file_put_contents( $backup_name, $content)) {
-            echo "Descarga exitosa " . "<br />";s
+            echo "Descarga exitosa " . "<br />";
         } else {
             echo "Descarga de archivo fallida." . "<br />";
         }
