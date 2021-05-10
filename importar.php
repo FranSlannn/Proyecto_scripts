@@ -1,5 +1,8 @@
 <?php
 
+/*DOCKER ---> docker run -it --rm --name proyecto-test -v ${PWD}:/usr/src/myapp -w /usr/src/myapp php:7.4-cli php importar.php 
+-host=localhost -newsite=wordpress33 -dbuser=root -pass= -destino=C:/xampp/htdocs
+            */
 
 // Para la linea de comando o desde Power Shell:
 // php importar.php -host=localhost -newsite=wordpress33 -dbuser=root -pass= -destino=C:/xampp/htdocs
