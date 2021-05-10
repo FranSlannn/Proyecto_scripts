@@ -2,12 +2,10 @@
 
 
 // Para la linea de comando o desde Power Shell:
-// php importar.php -host=localhost -newsite=wordpress33 -dbuser=root -pass=contraseña
+// php importar.php -host=localhost -newsite=wordpress33 -dbuser=root -pass= -destino=C:/xampp/htdocs
 
 // Para el navegador:
-// http://localhost/scripts/importar.php?-host=localhost&-newsite=wordpress33&-dbname=wordpress
-
-
+// http://localhost/scripts/importar_l.php?-host=localhost&-destino=C:/xampp/htdocs&-newsite=nuevositio&-dbuser=root&-pass=
 
 // necesario para hacer funcionar los scripts por powershell
 
@@ -32,6 +30,7 @@ if(isset($argv)){
             -host=localhost: Indica el host de la base de datos de wordpress a exportar
             -dbuser=root: Indica el nombre del usuario de la base de datos
             -pass=password Indica la clave del usuario            
+            -destino: Indica la ruta de ubicación del nuevo sitio
             -newsite=wordpress33 Indica el nombre de la nueva pagina de wordpress
         ");
         die;
@@ -43,6 +42,16 @@ if(isset($argv)){
     } else {//ejemplo de como se puede cambiar los datos en el powershell
         print("El argumento -host es obligatorio y debe indicar el nombre del servidor. Ej
         -host=localhost
+        ");
+        die;
+    }
+
+    // destino
+    if(isset($_GET['-destino'])) { //destino
+        $destino = $_GET['-destino'];  // por ejemplo: 'C:/xampp/htdocs';
+    } else {//ejemplo de como se puede cambiar los datos en el powershell
+        print("El argumento -destino es obligatorio y debe indicar la ruta del directorio destino. Ej
+        -destino=C:/xampp/htdocs
         ");
         die;
     }
@@ -79,15 +88,8 @@ if(isset($argv)){
 
 
 $comprimido = 'wordpress_bkp.zip';
-$destino = '../'. $_GET['-newsite'];
 $copia = '/sql/mybackup.sql';   // debe estar dentro de $destino: $destino . $copiaç
-
-//datos importantes
-	//$host = 'localhost';
-	//$dbuser = 'root';  //usuario
-	//$pass = ''; //contraseña
-	//$newsite = 'wordpress33'; //nombre base de datos 
-	$file_path = $destino . $copia; //donde esta el backup del sql
+$file_path = $destino . '/' . $newsite . $copia; //donde esta el backup del sql
 
 //Extender tiempo para garantizar ejecución completa de compresión
 	ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
@@ -96,7 +98,7 @@ $copia = '/sql/mybackup.sql';   // debe estar dentro de $destino: $destino . $co
 //Descomprimirmos el zip
 	$zip = new ZipArchive;
 	if ($zip->open($comprimido) === TRUE) {
-		$zip->extractTo($destino);
+		$zip->extractTo($destino.'/'. $_GET['-newsite']);
 		$zip->close();
 		echo 'ok';
 	} else {
@@ -104,7 +106,7 @@ $copia = '/sql/mybackup.sql';   // debe estar dentro de $destino: $destino . $co
 	}
 
 $conn2 = mysqli_connect($host, $dbuser, $pass);
-mysqli_query($conn2, "create database " . $newsite.";");
+mysqli_query($conn2, "create database " . $newsite.";");  // Crea la base de datos para el newsite
 $conn = mysqli_connect($host, $dbuser, $pass, $newsite);
 
 function restoreMysqlDB($filePath, $conn){
@@ -135,19 +137,24 @@ function restoreMysqlDB($filePath, $conn){
         } else {
         	echo  "<br />" . "Restauracion de base de datos completada."; 
         }
-    }else{
+    } else {
     	echo  "<br />" . "no hay archivo"; 
     } 
 }
 
-restoreMysqlDB($file_path, $conn);
-
 // ajustar wp-config.php
 //read the entire string
-$str=file_get_contents($destino . '/wp-config.php');
+$str=file_get_contents($file_path);    // Guarda es $str el contenido de mybackup.sql
+$str=str_replace('/wordpress"', '/'.$_GET['-newsite'].'"', $str);
+file_put_contents($file_path, $str);    // Actualizar contenido de mybackup.sql
+
+restoreMysqlDB($file_path, $conn);    // Restaura el backup del sql
+
+$str=file_get_contents($destino . '/' . $newsite . '/wp-config.php');
 //replace something in the file string - this is a VERY simple example
 $str=str_replace('\'wordpress\'', '\''.$_GET['-newsite'].'\'', $str);
+
 //write the entire string
-file_put_contents($destino . '/wp-config.php', $str);
+file_put_contents($destino . '/' . $newsite . '/wp-config.php', $str);
 
 ?>

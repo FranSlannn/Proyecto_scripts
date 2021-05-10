@@ -2,10 +2,10 @@
 
 // Para la linea de comando o desde Power Shell:
 // buscar la ruta C:\xampp\htdocs\scripts
-// php exportar.php -host=localhost -newsite=wordpress33 -dbname=wordpress -dbuser=root -pass=
+// php exportar.php -host=localhost -dbname=wordpress -dbuser=root -pass=
 
 // Para el navegador:
-// http://localhost/scripts/exportar.php?-host=localhost&-newsite=wordpress33&-dbname=wordpress
+// http://localhost/scripts/exportar.php?-host=localhost&-dbname=wordpress
 
 
 // necesario para hacer funcionar los scripts por powershell
@@ -33,7 +33,6 @@
             -dbuser=root: Indica el nombre del usuario de la base de datos
             -pass=password Indica la clave del usuario
             -dbname=wordpress Indica el nombre de la base de datos de wordpress
-            -newsite=wordpress33 Indica el nombre de la nueva pagina de wordpress
             
         ");
         die;
@@ -49,22 +48,12 @@
         die;
     }
 
-    //exportar el sql
-    if(isset($_GET['-newsite'])) { //nombre del nuevo sitio de wordpress
-        $newsite = $_GET['-newsite']; //'wordpress33';
-    } else {//ejemplo de como se puede cambiar los datos en el powershell
-        print("El argumento -newsite es obligatorio y debe indicar el nombre de la copia de la base de datos. Ej
-        -newsite=wordpress33
-        ");
-        die;
-    }
-
     if(isset($_GET['-dbname'])) { //nombre de la base de datos
         $DbName = $_GET['-dbname']; //'wordpress';
         $comprimido = $_GET['-dbname'] . '_bkp.zip';
     } else {//ejemplo de como se puede cambiar los datos en el powershell
         print("El argumento -dnname es obligatorio y debe indicar el nombre de la base de datos. Ej
-        -newsite=wordpress
+        -dbname=wordpress
         ");
         die;
     }
@@ -89,22 +78,18 @@
     }
 	//datos importantes
 	
-		//$mysqlPassword      = "";
-		//$mysqlHostName      = "localhost";
-		//$DbName             = "wordpress";
-		//$newsite            = 'wordpress33';
 		$backup_name        = "mybackup.sql";
 		$tables             = "Your tables";
     
     // Extiende tiempo para garantizar ejecución completa de compresión
-    ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
-    set_time_limit(300);
+    ini_set('max_execution_time', '420'); //420 seconds = 7 minutes
+    set_time_limit(420);
 
    //or add 5th parameter(array) of specific tables:    array("mytable1","mytable2","mytable3") for multiple tables
 
-    Export_Database($mysqlHostName,$mysqlUserName,$mysqlPassword,$DbName,  $tables=false, $backup_name, $mysqlHostName, $DbName, $newsite);
+    Export_Database($mysqlHostName,$mysqlUserName,$mysqlPassword,$DbName,  $tables=false, $backup_name, $mysqlHostName, $DbName);
 
-    function Export_Database($host,$user,$pass,$name,  $tables=false, $backup_name=false, $mysqlHostName, $DbName, $newsite)
+    function Export_Database($host,$user,$pass,$name,  $tables=false, $backup_name=false, $mysqlHostName, $DbName)
     {
         $mysqli = new mysqli($host,$user,$pass,$name); 
         $mysqli->select_db($name); 
@@ -170,9 +155,7 @@
             } $content .="\n\n\n";
         }
 
-        // Reemplazar en $content /localhost/wordpress por  '/localhost/' . $newsite
-        $content  = str_replace($mysqlHostName . '/' . $DbName, $mysqlHostName . '/' . $newsite, $content);
-        $content  = str_replace('0000-00-00 00:00:00', '', $content); //buscar y que esta vacio esto -----> NOT NULL DEFAULT '0000-00-00 00:00:00'
+        $content  = str_replace( "DEFAULT '0000-00-00 00:00:00'", '', $content); //buscar y que esta vacio esto -----> NOT NULL DEFAULT '0000-00-00 00:00:00'
         $content .= "SET FOREIGN_KEY_CHECKS=1;\n\n"; //arregla errores tablas sql
         
 
