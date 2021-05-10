@@ -1,5 +1,10 @@
 <?php 
 
+
+/*DOCKER ---> docker run -it --rm --name proyecto-test -v ${PWD}:/usr/src/myapp -w /usr/src/myapp php:7.4-cli php exportar.php
+ -host=localhost -dbname=wordpress -dbuser=root -pass=
+ */
+
 // Para la linea de comando o desde Power Shell:
 // buscar la ruta C:\xampp\htdocs\scripts
 // php exportar.php -host=localhost -dbname=wordpress -dbuser=root -pass=
