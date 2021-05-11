@@ -101,7 +101,7 @@
         $mysqli->query("SET NAMES 'utf8'");
 
         $queryTables    = $mysqli->query('SHOW TABLES'); 
-        while($row = $queryTables->fetch_object()) 
+        while($row = $queryTables->fetch_row()) 
         { 
             $target_tables[] = $row[0]; 
         }   
@@ -116,13 +116,13 @@
             $fields_amount  =   $result->field_count;  
             $rows_num=$mysqli->affected_rows;     
             $res            =   $mysqli->query('SHOW CREATE TABLE '.$table); 
-            $TableMLine     =   $res->fetch_object();
+            $TableMLine     =   $res->fetch_row();
             $content        = (!isset($content) ?  '' : $content) . "\n\n".$TableMLine[1].";\n\n";
            // var_dump($content);die;
 
             for ($i = 0, $st_counter = 0; $i < $fields_amount;   $i++, $st_counter=0) 
             {
-                while($row = $result->fetch_object())  
+                while($row = $result->fetch_row())  
                 { //when started (and every after 100 command cycle):
                     if ($st_counter%100 == 0 || $st_counter == 0 )  
                     {
