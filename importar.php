@@ -6,9 +6,12 @@
 
 // Para la linea de comando o desde Power Shell:
 // php importar.php -host=localhost -newsite=wordpress33 -dbuser=root -pass= -destino=C:/xampp/htdocs
+// buscar la ruta C:\xampp\htdocs\scripts
 
 // Para el navegador:
 // http://localhost/scripts/importar_l.php?-host=localhost&-destino=C:/xampp/htdocs&-newsite=nuevositio&-dbuser=root&-pass=
+
+//------------------------------------------------------------
 
 // necesario para hacer funcionar los scripts por powershell
 
@@ -146,7 +149,7 @@ function restoreMysqlDB($filePath, $conn){
 }
 
 // ajustar wp-config.php
-//read the entire string
+//lee el string
 $str=file_get_contents($file_path);    // Guarda es $str el contenido de mybackup.sql
 $str=str_replace('/wordpress"', '/'.$_GET['-newsite'].'"', $str);
 file_put_contents($file_path, $str);    // Actualizar contenido de mybackup.sql
@@ -154,10 +157,10 @@ file_put_contents($file_path, $str);    // Actualizar contenido de mybackup.sql
 restoreMysqlDB($file_path, $conn);    // Restaura el backup del sql
 
 $str=file_get_contents($destino . '/' . $newsite . '/wp-config.php');
-//replace something in the file string - this is a VERY simple example
+//remplaza lo que queramos en el string - 
 $str=str_replace('\'wordpress\'', '\''.$_GET['-newsite'].'\'', $str);
 
-//write the entire string
+//escribe todo el string
 file_put_contents($destino . '/' . $newsite . '/wp-config.php', $str);
 
 ?>
