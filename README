@@ -1,0 +1,7 @@
+El proyecto consiste en la elaboración de un script por el cual poder migrar una página web realizada en WordPress
+
+Las principales acciones que se pueden realizar son la importación y exportación tanto de la base de datos como de todos los archivos necesarios para el buen funcionamiento de la página. En el script, los usuarios podrán elegir la ruta de descarga de las carpetas, el nuevo nombre que tendrá la página, los datos de conexión con el servidor, entre otras opciones. 
+
+Además de todo esto, los usuarios podrán ver en todo momento una opción de ayuda que te señalara todos los comandos que tiene el script
+
+Todo ello se podrá hacer directamente con comandos en powershell,CMD de Windows,Linux, macOs y tambien con ayuda de Docker
